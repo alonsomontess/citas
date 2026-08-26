@@ -15,6 +15,8 @@
     --pine-light:#4C6656;
     --gold:#C99A3D;
     --teal:#3C6273;
+    --wine:#8a3b52;
+    --plum:#5b3b6b;
     --line: rgba(35,49,39,0.16);
     --card: #FBF7EC;
   }
@@ -112,6 +114,7 @@
   .chip.active[data-cat="natura"]{background:var(--pine); border-color:var(--pine);}
   .chip.active[data-cat="mistico"]{background:var(--gold); border-color:var(--gold); color:#2a2110;}
   .chip.active[data-cat="viral"]{background:#4a4a8a; border-color:#4a4a8a;}
+  .chip.active[data-cat="gastro"]{background:var(--plum); border-color:var(--plum);}
 
   .count{
     font-family:'IBM Plex Mono', monospace;
@@ -208,6 +211,179 @@
   .card[data-cats*="natura"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]){border-left:5px solid var(--pine);}
   .card[data-cats*="mistico"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]):not([data-cats*="natura"]){border-left:5px solid var(--gold);}
   .card[data-cats*="viral"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]):not([data-cats*="natura"]):not([data-cats*="mistico"]){border-left:5px solid #4a4a8a;}
+  .card[data-cats*="gastro"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]):not([data-cats*="natura"]):not([data-cats*="mistico"]):not([data-cats*="viral"]){border-left:5px solid var(--plum);}
+
+  /* ADD-TO-DAY BUTTON */
+  .add-btn{
+    width:calc(100% - 36px);
+    margin:0 18px 16px;
+    padding:9px 0;
+    border:1.5px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    border-radius:20px;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .add-btn:hover{background:var(--ink); color:var(--paper);}
+  .add-btn.added{background:var(--pine); border-color:var(--pine); color:var(--paper);}
+
+  /* ITINERARIES (static) */
+  .itineraries{
+    margin: 54px 0 46px;
+  }
+  .itineraries h2{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    font-weight:650;
+    margin:0 0 6px;
+  }
+  .itineraries .sub{margin-bottom:24px;}
+  .itin-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+    gap:16px;
+  }
+  .itin-card{
+    background:var(--pine);
+    color:var(--paper);
+    border-radius:3px;
+    padding:20px 20px 18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .itin-card::before{
+    content:"";
+    position:absolute; top:0; right:0;
+    width:70px; height:70px;
+    background:radial-gradient(circle at top right, rgba(255,255,255,0.10), transparent 70%);
+  }
+  .itin-place{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    opacity:.75;
+    margin-bottom:4px;
+  }
+  .itin-card h3{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    margin:0 0 12px;
+  }
+  .itin-steps{list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:7px;}
+  .itin-steps li{
+    font-size:13px;
+    line-height:1.4;
+    padding-left:20px;
+    position:relative;
+    opacity:.95;
+  }
+  .itin-steps li::before{
+    content:attr(data-slot);
+    position:absolute; left:0; top:0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9px;
+    text-transform:uppercase;
+    opacity:.6;
+    display:none;
+  }
+  .slot{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    text-transform:uppercase;
+    background:rgba(255,255,255,0.14);
+    padding:1px 6px;
+    border-radius:8px;
+    margin-right:6px;
+  }
+  .itin-foot{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    border-top:1px solid rgba(255,255,255,0.18);
+    padding-top:10px;
+    opacity:.9;
+  }
+
+  /* DAY PLANNER DRAWER */
+  #dayBar{
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--ink);
+    color:var(--paper);
+    padding:12px 22px;
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    z-index:50;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    box-shadow:0 -4px 14px rgba(0,0,0,0.18);
+  }
+  #dayBar.show{display:flex;}
+  #dayBar button{
+    background:var(--clay);
+    color:#fff;
+    border:none;
+    padding:9px 18px;
+    border-radius:20px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    cursor:pointer;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  #dayBarInner{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+
+  #dayModalOverlay{
+    position:fixed; inset:0; background:rgba(35,49,39,0.55);
+    display:none; align-items:center; justify-content:center;
+    z-index:60; padding:20px;
+  }
+  #dayModalOverlay.show{display:flex;}
+  #dayModal{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    max-width:520px; width:100%;
+    max-height:82vh; overflow-y:auto;
+    padding:26px 26px 22px;
+    border-radius:4px;
+  }
+  #dayModal h2{
+    font-family:'Fraunces', serif; font-size:26px; margin:0 0 4px;
+  }
+  #dayModal .sub2{font-size:13px; color:#5c6459; margin-bottom:18px;}
+  .day-item{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .day-item-title{font-weight:600; font-size:14.5px; font-family:'Fraunces', serif;}
+  .day-item-place{font-size:11.5px; color:#6b7268; font-family:'IBM Plex Mono', monospace;}
+  .day-item button{
+    background:none; border:none; color:var(--clay-dark);
+    font-family:'IBM Plex Mono', monospace; font-size:11px;
+    cursor:pointer; text-decoration:underline; flex-shrink:0;
+  }
+  .day-empty{font-size:13.5px; color:#6b7268; padding:20px 0; text-align:center;}
+  #dayModal .modal-actions{
+    display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;
+  }
+  #dayModal .modal-actions button{
+    border:1.5px solid var(--ink); background:transparent; color:var(--ink);
+    padding:9px 16px; border-radius:20px; font-family:'IBM Plex Mono', monospace;
+    font-size:12px; cursor:pointer; text-transform:uppercase;
+  }
+  #dayModal .modal-actions button.primary{background:var(--ink); color:var(--paper);}
+  #dayModal .modal-actions button.close-btn{margin-left:auto; border-color:transparent; text-decoration:underline;}
 
   .hidden{display:none !important;}
 
@@ -237,7 +413,7 @@
   <header class="hero">
     <div class="eyebrow">Reto de la semana · Alonso &amp; Lila</div>
     <h1>El radio de<br><em>reconexión.</em></h1>
-    <p class="sub">De la ciudad hasta donde llega Cuernavaca — desde planes dentro de CDMX hasta 2h30 en coche por Edomex, Morelos e Hidalgo. Adrenalina pura, relax total, romance clásico, algo místico, un montón de opciones virales. Filtra y arma su próxima salida.</p>
+    <p class="sub">De la ciudad hasta donde llega Cuernavaca — desde planes dentro de CDMX (Ajusco, Roma, Condesa, Coyoacán, Polanco, San Ángel incluidos) hasta 2h30 en coche por Edomex, Morelos, Hidalgo y Puebla. Adrenalina, relax, romance, misticismo, los 5 mejores restaurantes de la ciudad y un montón de ideas virales. Filtra, arma tu día completo con "+ Agregar al día" en cada tarjeta, o toma una de las rutas ya armadas de abajo.</p>
     <div class="radius-note">
       <span><span class="dot" style="background:var(--clay)"></span>Aventura extrema</span>
       <span><span class="dot" style="background:var(--teal)"></span>Relax / spa</span>
@@ -258,6 +434,7 @@
       <button class="chip" data-filter="cat" data-cat="natura">Naturaleza</button>
       <button class="chip" data-filter="cat" data-cat="mistico">Místico</button>
       <button class="chip" data-filter="cat" data-cat="viral">Viral</button>
+      <button class="chip" data-filter="cat" data-cat="gastro">Gastronomía</button>
     </div>
     <div class="filter-row">
       <span class="filter-label">Distancia</span>
@@ -277,10 +454,97 @@
     <div class="count" id="count"></div>
   </div>
 
+  <section class="itineraries">
+    <h2>Rutas de un día ya armadas</h2>
+    <p class="sub">Si no quieren combinar nada a mano, aquí van cinco días completos, pensados con horarios reales — mañana, comida y tarde/noche.</p>
+    <div class="itin-grid">
+
+      <div class="itin-card">
+        <div class="itin-place">Tepoztlán, Morelos · 1h30</div>
+        <h3>Día redondo místico</h3>
+        <ul class="itin-steps">
+          <li><span class="slot">Mañana</span>Subir al Cerro del Tepozteco hasta la pirámide</li>
+          <li><span class="slot">Comida</span>Margarita Concept Garden, jardín botánico con vista al cerro</li>
+          <li><span class="slot">Tarde</span>Mercado de artesanías + nieve de sabores raros</li>
+          <li><span class="slot">Noche</span>Cena en Tantra Esperando al Sol, terraza-jardín</li>
+        </ul>
+        <div class="itin-foot"><span>$$ – $$$</span><span>Todo el día</span></div>
+      </div>
+
+      <div class="itin-card">
+        <div class="itin-place">Malinalco, Edomex · 2h20</div>
+        <h3>Aventura + noche en domo</h3>
+        <ul class="itin-steps">
+          <li><span class="slot">Mañana</span>Tirolesa y rappel en el pueblo</li>
+          <li><span class="slot">Comida</span>Antojitos locales en el centro (cecina, trucha a la Malinalco)</li>
+          <li><span class="slot">Tarde</span>Zona arqueológica Cerro de los Ídolos</li>
+          <li><span class="slot">Noche</span>Domo con jacuzzi en MaliKualli, amanecer sobre el valle</li>
+        </ul>
+        <div class="itin-foot"><span>$$$</span><span>Día + noche</span></div>
+      </div>
+
+      <div class="itin-card">
+        <div class="itin-place">Ajusco, CDMX · 40 min</div>
+        <h3>Aventura sin salir de la ciudad</h3>
+        <ul class="itin-steps">
+          <li><span class="slot">Mañana</span>Cabalgata en Rancho Carrega, Santo Tomás Ajusco</li>
+          <li><span class="slot">Comida</span>Trucha recién pescada en el Parque Ejidal San Nicolás Totolapan</li>
+          <li><span class="slot">Tarde</span>Tirolesa y senderismo por la Ruta Verde del Ajusco</li>
+          <li><span class="slot">Cierre</span>Jacuzzi y sauna al aire libre antes de bajar</li>
+        </ul>
+        <div class="itin-foot"><span>$ – $$</span><span>Medio día / día completo</span></div>
+      </div>
+
+      <div class="itin-card">
+        <div class="itin-place">Valle de Bravo, Edomex · 2h</div>
+        <h3>Adrenalina + lago</h3>
+        <ul class="itin-steps">
+          <li><span class="slot">Mañana</span>Vuelo en parapente sobre el lago</li>
+          <li><span class="slot">Comida</span>Quirina, rooftop del Mubu Hotel con vista al lago</li>
+          <li><span class="slot">Tarde</span>Kayak o lancha en el lago, cascada de Avándaro</li>
+          <li><span class="slot">Noche</span>Caminata por el centro colonial y bares de pueblo chic</li>
+        </ul>
+        <div class="itin-foot"><span>$$$</span><span>Todo el día</span></div>
+      </div>
+
+      <div class="itin-card">
+        <div class="itin-place">CDMX · 0 min</div>
+        <h3>Noche romántica sin planear con semanas</h3>
+        <ul class="itin-steps">
+          <li><span class="slot">Tarde</span>Castillo de Chapultepec + atardecer en los jardines</li>
+          <li><span class="slot">Cena</span>Taberna, Juárez — coctelería y ambiente íntimo</li>
+          <li><span class="slot">Noche</span>Rueda de la fortuna en Parque Aztlán</li>
+        </ul>
+        <div class="itin-foot"><span>$$</span><span>Una tarde-noche</span></div>
+      </div>
+
+    </div>
+  </section>
+
   <div class="grid" id="grid"></div>
 
+  <!-- DAY PLANNER -->
+  <div id="dayBar">
+    <div id="dayBarInner"><span id="dayCount">0 planes agregados</span></div>
+    <button id="openDayModal">Ver mi día</button>
+  </div>
+
+  <div id="dayModalOverlay">
+    <div id="dayModal">
+      <h2>Tu plan del día</h2>
+      <div class="sub2">Combina lo que quieras — mañana, comida, tarde y noche.</div>
+      <div id="dayList"></div>
+      <div class="modal-actions">
+        <button class="primary" id="copyDay">Copiar itinerario</button>
+        <button id="clearDay">Vaciar</button>
+        <button class="close-btn" id="closeDayModal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+
   <footer>
-    <span>23 rutas · CDMX, Edomex, Morelos e Hidalgo</span>
+    <span>50 rutas · CDMX, Edomex, Morelos, Hidalgo y Puebla</span>
     <span>Toca un filtro para combinar categoría + distancia + presupuesto</span>
   </footer>
 </div>
@@ -493,6 +757,249 @@ const spots = [
     tags:["Realidad virtual","Misión espacial","Plan de una hora"],
     desc:"Una experiencia inmersiva en VR que recrea la misión Apollo 11 — de las novedades culturales que más se están recomendando este año como plan de pareja corto y diferente, ideal para combinar con una caminata por el Centro después.",
     budget:"$300–500 / persona"
+  },
+  {
+    place:"Santo Tomás Ajusco, CDMX",
+    title:"Cabalgata y jacuzzi al aire libre en el bosque",
+    time:"40 min", dist:"ciudad", bud:"medio",
+    cats:["relax","natura"],
+    tags:["Cabalgata guiada","Jacuzzi y sauna","3,000 msnm entre volcanes inactivos"],
+    desc:"Rancho Ecológico Carrega, en pleno Ajusco: clases y cabalgatas a caballo por senderos de bosque, y para cerrar el día, un oasis con jacuzzi, sauna y experiencias sensoriales — sin salir realmente de la ciudad. La combinación de adrenalina suave + relax que casi nadie conoce.",
+    budget:"$400–900 / persona"
+  },
+  {
+    place:"Ajusco, CDMX (Magdalena Contreras)",
+    title:"Tirolesa, truchas y cabañas en bosque de pinos",
+    time:"35 min", dist:"ciudad", bud:"bajo",
+    cats:["extremo","natura"],
+    tags:["Tirolesa de 20m","Pesca de trucha","150km de senderos"],
+    desc:"El Parque Ejidal San Nicolás Totolapan: 150 km de senderos entre encinos y oyameles, tirolesa, ciclismo de montaña, pesca de trucha y cabañas para pasar la noche. Se llega en transporte público desde Tasqueña — de los secretos mejor guardados de la ciudad para sentir que saliste sin salir.",
+    budget:"$150–400 / persona"
+  },
+  {
+    place:"Ruta Verde del Ajusco, CDMX",
+    title:"Rappel y tirolesa de 300 metros en la reserva boscosa más grande de la ciudad",
+    time:"45 min", dist:"ciudad", bud:"bajo",
+    cats:["extremo","natura"],
+    tags:["Tirolesa de 300m","Rappel","Ciclismo de montaña"],
+    desc:"Un recorrido por la zona boscosa más conservada de CDMX, cruzando Tlalpan y Magdalena Contreras: tirolesa larga, rappel, campismo y albergues alpinos. La opción para quienes quieren la adrenalina de Malinalco pero sin manejar dos horas.",
+    budget:"$200–500 / persona"
+  },
+  {
+    place:"Santo Tomás Ajusco, CDMX",
+    title:"Noche en burbuja + rappel y cuatrimoto",
+    time:"45 min", dist:"ciudad", bud:"alto",
+    cats:["romantico","extremo"],
+    tags:["Hotel burbuja transparente","Rappel en el Ajusco","Rutas offroad 4x4"],
+    desc:"Alpino Bubble Glamping: domos transparentes en medio del bosque para dormir viendo las estrellas, con rappel, cuatrimoto y rutas 4x4 disponibles de día. Es el \"Malinalco express\" — la misma fantasía de domo + aventura, a 45 minutos de la ciudad.",
+    budget:"$3,500–5,500 / noche"
+  },
+  {
+    place:"Tlayacapan, Morelos",
+    title:"El pueblo mágico menos saturado de Morelos",
+    time:"1h40", dist:"media", bud:"bajo",
+    cats:["mistico","natura"],
+    tags:["Convento Patrimonio UNESCO","Talleres de alfarería","Casi sin turismo masivo"],
+    desc:"Convento de San Juan Bautista del siglo XVI (Patrimonio de la Humanidad), talleres de barro donde puedes ver y comprar directo al artesano, y calles que casi no aparecen en las guías típicas. Si lo que buscan es sentir que descubrieron algo, este es el pueblo.",
+    budget:"$200–400 / persona"
+  },
+  {
+    place:"Metepec, Edomex",
+    title:"Árboles de la Vida y museo del barro",
+    time:"1h", dist:"corta", bud:"bajo",
+    cats:["mistico","viral"],
+    tags:["Árboles de la Vida artesanales","Museo del Barro","Muy fotogénico"],
+    desc:"Cuna de los Árboles de la Vida, esculturas de barro pintadas a mano que cuentan historias bíblicas o cotidianas. El Museo del Barro y los talleres alrededor de la plaza son de los rincones más fotografiados del Edomex — y está mucho más cerca de lo que parece.",
+    budget:"$150–350 / persona"
+  },
+  {
+    place:"Villa del Carbón, Edomex",
+    title:"Presa, cabañas de madera y embutidos artesanales",
+    time:"1h20", dist:"corta", bud:"bajo",
+    cats:["natura","relax"],
+    tags:["Presa para lancha o pesca","Ruta de los embutidos","Cabañas de bosque"],
+    desc:"Un pueblo de bosque y presa al norte del Edomex, famoso por sus embutidos artesanales (chorizos, salchichas) y sus cabañas de madera. Menos conocido que Valle de Bravo, con el mismo tipo de paisaje y bastante menos gente.",
+    budget:"$200–500 / persona"
+  },
+  {
+    place:"Tepotzotlán, Edomex",
+    title:"El convento barroco más impresionante cerca de CDMX",
+    time:"45 min", dist:"ciudad", bud:"bajo",
+    cats:["mistico"],
+    tags:["Ex convento y Museo Virreinal","Fachada barroca churrigueresca","Plazas empedradas"],
+    desc:"El Ex Convento de San Francisco Javier, con una de las fachadas barrocas más elaboradas de México, hoy Museo Nacional del Virreinato. A 45 minutos, ideal para una tarde corta entre semana sin necesidad de planear todo un día.",
+    budget:"$150–300 / persona"
+  },
+  {
+    place:"Tepoztlán, Morelos",
+    title:"Cena en terraza-jardín bajo las estrellas",
+    time:"1h30", dist:"corta", bud:"medio",
+    cats:["gastro","romantico"],
+    tags:["Tantra Esperando al Sol","Terraza-jardín al aire libre","Ambiente bohemio, luces tenues"],
+    desc:"Restaurante con concepto de terraza-jardín en Santo Domingo: aromas de maíz nixtamalizado, cocina tradicional con toques contemporáneos, y una decoración con detalles zen que hace que cenar ahí se sienta como estar dentro de una película.",
+    budget:"$500–900 / persona"
+  },
+  {
+    place:"Tepoztlán, Morelos",
+    title:"Fine dining dentro de un jardín botánico",
+    time:"1h30", dist:"corta", bud:"alto",
+    cats:["gastro","romantico"],
+    tags:["Margarita Concept Garden","Vista al Tepozteco","Coctelería de autor"],
+    desc:"Un restaurante casual fine dining montado dentro de un jardín botánico, con vista directa al cerro del Tepozteco. Cocina de ingredientes locales, coctelería cuidada y un ambiente que combina naturaleza con mesa cuidada — de los favoritos en reseñas de esta temporada.",
+    budget:"$700–1,200 / persona"
+  },
+  {
+    place:"Valle de Bravo, Edomex",
+    title:"Rooftop con vista al lago",
+    time:"2h", dist:"media", bud:"alto",
+    cats:["gastro","romantico"],
+    tags:["Quirina, Mubu Hotel Boutique","Terraza en azotea","Cocina mexicana contemporánea"],
+    desc:"Dentro del Mubu Hotel Boutique: terraza en la azotea con vista panorámica al lago y al pueblo, platos como tamal de pavo con mole o lubina rellena de camarones. El cierre perfecto para un día de parapente o lancha.",
+    budget:"$800–1,400 / persona"
+  },
+  {
+    place:"Cuernavaca, Morelos",
+    title:"Cena con antorchas en hacienda del siglo XVI",
+    time:"1h30", dist:"corta", bud:"alto",
+    cats:["gastro","romantico"],
+    tags:["Hacienda de Cortés","Terraza Huamuchil","Montaje romántico con pétalos y antorchas"],
+    desc:"Una hacienda de caña de azúcar del siglo XVI reconvertida en restaurante, con la opción de pedir un montaje romántico en terraza con antorchas y pétalos de rosa. De las cenas más elaboradas y fotografiadas de todo el radio de CDMX.",
+    budget:"$900–1,600 / persona"
+  },
+  {
+    place:"Juárez, CDMX",
+    title:"Coctelería y luz tenue para quedarse horas platicando",
+    time:"15 min", dist:"ciudad", bud:"medio",
+    cats:["gastro","romantico"],
+    tags:["Taberna","Coctelería de autor","Ambiente íntimo"],
+    desc:"Uno de los restaurantes que más se repite en listas de \"cita romántica CDMX\" este año: luz tenue, coctelería espectacular y un ambiente hecho para conversaciones largas. Ideal para cerrar cualquier plan dentro de la ciudad.",
+    budget:"$600–1,000 / persona"
+  },
+  {
+    place:"Polanco, CDMX",
+    title:"Quintonil — la mesa mejor valorada de México",
+    time:"20 min", dist:"ciudad", bud:"alto",
+    cats:["gastro"],
+    tags:["2 estrellas Michelin","#3 en The World's 50 Best","Menú de temporada con producto propio"],
+    desc:"No es el más caro de la ciudad, es el que hoy tiene el mejor consenso crítico: dos estrellas Michelin y el puesto #3 del mundo en The World's 50 Best Restaurants 2025. Cocina que gira alrededor de ingredientes mexicanos, con verduras que cultivan ellos mismos. Reserva con semanas de margen.",
+    budget:"$2,500–4,500 / persona"
+  },
+  {
+    place:"Polanco, CDMX",
+    title:"Pujol — el mole de 3,650 días",
+    time:"20 min", dist:"ciudad", bud:"alto",
+    cats:["gastro"],
+    tags:["2 estrellas Michelin","Chef Enrique Olvera","Mole madre servido desde una olla que nunca deja de cocinarse"],
+    desc:"El restaurante mexicano más reconocido internacionalmente, con Enrique Olvera al frente. Su mole madre lleva cocinándose de forma continua desde hace más de una década. Elegancia discreta, nada de solemnidad forzada — es de las experiencias que se recuerdan por años, no solo por la comida.",
+    budget:"$2,800–5,000 / persona"
+  },
+  {
+    place:"Roma Norte, CDMX",
+    title:"Rosetta — cocina de temporada en casona histórica",
+    time:"20 min", dist:"ciudad", bud:"alto",
+    cats:["gastro","romantico"],
+    tags:["1 estrella Michelin","Casona restaurada","Fusión ítalo-mexicana"],
+    desc:"De la chef Elena Reygadas, en el puesto #48 de The World's 50 Best del mundo. Ambiente íntimo dentro de una casona de Roma Norte, cocina de temporada con raíces mexicanas y técnica mediterránea. De las mesas más difíciles de conseguir de la ciudad — vale la pena reservar con tiempo.",
+    budget:"$1,200–2,200 / persona"
+  },
+  {
+    place:"Roma Norte, CDMX",
+    title:"Contramar — la mejor relación calidad-precio de la ciudad",
+    time:"20 min", dist:"ciudad", bud:"medio",
+    cats:["gastro","viral"],
+    tags:["Bib Gourmand Michelin","Pescados y mariscos","Ambiente relajado, sin solemnidad"],
+    desc:"Reconocido por la Guía Michelin, pero sin los precios ni la formalidad de un fine dining: pescado a la talla, tostadas de atún y un ambiente de comida larga entre semana o fin de semana. Es la prueba de que \"mejor\" no siempre significa \"más caro\".",
+    budget:"$500–900 / persona"
+  },
+  {
+    place:"Clavería, CDMX",
+    title:"Nicos — 60 años de cocina mexicana que no falla",
+    time:"25 min", dist:"ciudad", bud:"bajo",
+    cats:["gastro"],
+    tags:["Institución desde los años 50","Excelente relación calidad-precio","Cocina mexicana clásica bien hecha"],
+    desc:"Fuera del radar Michelin pero con el respeto de generaciones de comensales: una institución de cocina mexicana con más de 60 años, ideal para una comida entre semana sin la solemnidad ni el precio de los grandes nombres. La opción \"mejor sin ser caro\" por excelencia.",
+    budget:"$350–600 / persona"
+  },
+  {
+    place:"Roma / Condesa, CDMX",
+    title:"Ruta de speakeasies detrás de puertas secretas",
+    time:"20 min", dist:"ciudad", bud:"medio",
+    cats:["viral","romantico"],
+    tags:["Hanky Panky","Xáman","Coctelería de autor, entrada escondida"],
+    desc:"Bares escondidos tras puertas que no parecen puertas — hay que saber tocar o dar una contraseña. Cócteles de autor, música en vivo y ese punto de \"descubrimos algo que no todos conocen\" que hace que la noche se sienta distinta. Empiecen por uno y sigan caminando entre Roma y Condesa.",
+    budget:"$500–900 / persona"
+  },
+  {
+    place:"Coyoacán, CDMX",
+    title:"Taller de cerámica + paletas en el Jardín Hidalgo",
+    time:"30 min", dist:"ciudad", bud:"bajo",
+    cats:["romantico","viral"],
+    tags:["Taller de cerámica en pareja","Paletas y nieves artesanales","Jardín Hidalgo y su kiosco"],
+    desc:"Hacen una pieza de cerámica juntos en un taller del barrio, y después cruzan al Jardín Hidalgo por una paleta o nieve artesanal para sentarse en el kiosco. Un plan que combina crear algo con las manos y el clásico paseo de Coyoacán, sin quedarse solo en \"vimos la Casa Azul\".",
+    budget:"$400–800 / persona"
+  },
+  {
+    place:"Polanco, CDMX",
+    title:"Museo Soumaya + Museo Jumex, entrada gratis",
+    time:"20 min", dist:"ciudad", bud:"bajo",
+    cats:["mistico","romantico"],
+    tags:["Entrada gratuita a ambos","Arte clásico y contemporáneo frente a frente","Plan de tarde"],
+    desc:"Dos museos uno frente al otro, con entrada libre: el Soumaya con escultura clásica y el Jumex con arte contemporáneo. Un plan de tarde que no cuesta casi nada y da para horas de conversación — de los que más se recomiendan como \"cita cultural gratis\" en la ciudad.",
+    budget:"Gratis – $200 / persona"
+  },
+  {
+    place:"Xoco / Santa Fe, CDMX",
+    title:"Cine al aire libre en la Cineteca o Parque La Mexicana",
+    time:"25 min", dist:"ciudad", bud:"bajo",
+    cats:["romantico","viral"],
+    tags:["Proyecciones al aire libre","Llevar sus propios snacks","Plan de noche entre semana"],
+    desc:"Ver una película sentados en el pasto, bajo el cielo de la ciudad, en la Cineteca Nacional o en Parque La Mexicana. Barato, relajado, y con ese aire de \"cita de película\" sin tener que ir a ningún lado fuera de la ciudad.",
+    budget:"Gratis – $250 / persona"
+  },
+  {
+    place:"Chimalistac, CDMX",
+    title:"Taller de flores prensadas para dos",
+    time:"25 min", dist:"ciudad", bud:"bajo",
+    cats:["romantico","viral"],
+    tags:["Taller con materiales incluidos","Se llevan un cuadro hecho a mano","Barrio tranquilo y arbolado"],
+    desc:"Un taller de flores prensadas en uno de los rincones más escondidos y verdes de la ciudad: arman su propio cuadro con flores reales, materiales incluidos. Es de los planes tipo \"hacer algo juntos con las manos\" que están sonando fuerte este año como alternativa a la cena de siempre.",
+    budget:"$700–1,100 / pareja"
+  },
+  {
+    place:"San Ángel, CDMX",
+    title:"Bazar Sábado y callejones empedrados",
+    time:"25 min", dist:"ciudad", bud:"bajo",
+    cats:["mistico","romantico"],
+    tags:["Mercado de arte solo los sábados","Plaza San Jacinto","Casonas coloniales"],
+    desc:"Uno de los barrios más fotogénicos y menos explotados en TikTok comparado con Roma o Coyoacán: arte, artesanía y antigüedades cada sábado en la Plaza San Jacinto, con callejones empedrados alrededor. Se siente como salir de la ciudad sin salir de la ciudad.",
+    budget:"$200–500 / persona"
+  },
+  {
+    place:"San Juan Teotihuacán / San Martín de las Pirámides, Edomex",
+    title:"El pueblo mágico detrás de las pirámides",
+    time:"50 min", dist:"corta", bud:"bajo",
+    cats:["mistico","viral"],
+    tags:["Talleres de obsidiana","Entrada menos concurrida a la zona arqueológica","Mercado con nieves artesanales"],
+    desc:"El pueblo que está justo junto a Teotihuacán, pero que casi nadie visita como destino en sí mismo: talleres donde ven trabajar la obsidiana en vivo, un mercado pequeño y auténtico, y la entrada a las pirámides con muchas menos multitudes que el acceso principal.",
+    budget:"$200–450 / persona"
+  },
+  {
+    place:"Tonatico, Edomex",
+    title:"Aguas termales y grutas con estalactitas",
+    time:"2h", dist:"media", bud:"medio",
+    cats:["relax","natura"],
+    tags:["Parque acuático de aguas termales","Grutas de la Estrella","Junto a Ixtapan de la Sal"],
+    desc:"El pueblo con encanto vecino de Ixtapan de la Sal: aguas termales en parque acuático y las Grutas de la Estrella, con estalactitas y estalagmitas para explorar. Se puede combinar con Ixtapan el mismo día para hacer un fin de semana completo de relax.",
+    budget:"$200–450 / persona"
+  },
+  {
+    place:"Huasca de Ocampo, Hidalgo — extra si estiran el radio",
+    title:"Prismas basálticos y haciendas antiguas",
+    time:"2h30", dist:"larga", bud:"medio",
+    cats:["natura","mistico"],
+    tags:["Prismas Basálticos de Santa María Regla","Haciendas del siglo XIX","Recorridos en globo"],
+    desc:"El primer Pueblo Mágico de México (nombrado en 2001): formaciones de roca volcánica en columnas hexagonales que parecen un órgano gigante, haciendas mineras convertidas en hoteles, y bosques para caminar. Cae un poco más lejos que Cuernavaca, pero es de los paisajes más distintos de todo el radio.",
+    budget:"$300–700 / persona"
   }
 ];
 
@@ -500,7 +1007,7 @@ const grid = document.getElementById('grid');
 const countEl = document.getElementById('count');
 
 function render(){
-  grid.innerHTML = spots.map(s => `
+  grid.innerHTML = spots.map((s,i) => `
     <div class="card" data-cats="${s.cats.join(',')}" data-dist="${s.dist}" data-bud="${s.bud}">
       <div class="stamp"><span class="t">${s.time}</span><span class="l">${s.dist==='ciudad' ? 'en la ciudad' : 'desde cdmx'}</span></div>
       <div class="card-top">
@@ -510,10 +1017,100 @@ function render(){
       </div>
       <div class="desc">${s.desc}</div>
       <div class="meta"><span>${s.budget}</span></div>
+      <button class="add-btn" data-id="${i}">+ Agregar al día</button>
     </div>
   `).join('');
   applyFilters();
+  document.querySelectorAll('.add-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = parseInt(btn.dataset.id);
+      toggleDayItem(id, btn);
+    });
+  });
 }
+
+let myDay = [];
+
+function toggleDayItem(id, btn){
+  const idx = myDay.indexOf(id);
+  if(idx === -1){
+    myDay.push(id);
+    if(btn){ btn.classList.add('added'); btn.textContent = '✓ En tu día'; }
+  } else {
+    myDay.splice(idx,1);
+    if(btn){ btn.classList.remove('added'); btn.textContent = '+ Agregar al día'; }
+  }
+  updateDayBar();
+}
+
+function updateDayBar(){
+  const bar = document.getElementById('dayBar');
+  const countEl2 = document.getElementById('dayCount');
+  if(myDay.length === 0){
+    bar.classList.remove('show');
+  } else {
+    bar.classList.add('show');
+    countEl2.textContent = `${myDay.length} plan${myDay.length===1?'':'es'} agregado${myDay.length===1?'':'s'}`;
+  }
+  renderDayModal();
+}
+
+function renderDayModal(){
+  const list = document.getElementById('dayList');
+  if(myDay.length === 0){
+    list.innerHTML = '<div class="day-empty">Aún no agregas nada. Usa "+ Agregar al día" en cualquier tarjeta de arriba.</div>';
+    return;
+  }
+  list.innerHTML = myDay.map(id => {
+    const s = spots[id];
+    return `
+      <div class="day-item">
+        <div>
+          <div class="day-item-title">${s.title}</div>
+          <div class="day-item-place">${s.place} · ${s.time} · ${s.budget}</div>
+        </div>
+        <button data-remove="${id}">Quitar</button>
+      </div>
+    `;
+  }).join('');
+  list.querySelectorAll('[data-remove]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = parseInt(b.dataset.remove);
+      const btn = document.querySelector(`.add-btn[data-id="${id}"]`);
+      toggleDayItem(id, btn);
+    });
+  });
+}
+
+document.getElementById('openDayModal').addEventListener('click', ()=>{
+  document.getElementById('dayModalOverlay').classList.add('show');
+});
+document.getElementById('closeDayModal').addEventListener('click', ()=>{
+  document.getElementById('dayModalOverlay').classList.remove('show');
+});
+document.getElementById('dayModalOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'dayModalOverlay') e.currentTarget.classList.remove('show');
+});
+document.getElementById('clearDay').addEventListener('click', ()=>{
+  document.querySelectorAll('.add-btn.added').forEach(b=>{
+    b.classList.remove('added'); b.textContent = '+ Agregar al día';
+  });
+  myDay = [];
+  updateDayBar();
+});
+document.getElementById('copyDay').addEventListener('click', ()=>{
+  if(myDay.length === 0) return;
+  const text = "Nuestro plan del día:\n\n" + myDay.map(id=>{
+    const s = spots[id];
+    return `• ${s.title} — ${s.place} (${s.time}, ${s.budget})`;
+  }).join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('copyDay');
+    const original = btn.textContent;
+    btn.textContent = '¡Copiado!';
+    setTimeout(()=>{ btn.textContent = original; }, 1500);
+  });
+});
 
 let state = {cat:'all', dist:'all', bud:'all'};
 
