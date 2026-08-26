@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El radio de reconexión — viajes cortos desde CDMX</title>
+<style>
+  :root{
+    --ink:#233127;
+    --paper:#EFE7D3;
+    --paper-dark:#E4D9BC;
+    --clay:#C1622B;
+    --clay-dark:#9c4a1d;
+    --pine:#33493C;
+    --pine-light:#4C6656;
+    --gold:#C99A3D;
+    --teal:#3C6273;
+    --line: rgba(35,49,39,0.16);
+    --card: #FBF7EC;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans', Arial, sans-serif;}
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&display=swap');
+
+  body{
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(35,49,39,0.07) 1px, transparent 1.6px);
+    background-size: 22px 22px;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:38px 22px 80px;}
+
+  /* HERO */
+  header.hero{
+    position:relative;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:26px;
+    margin-bottom:34px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--clay-dark);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--clay-dark);display:inline-block;}
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:650;
+    font-size:clamp(34px,6vw,58px);
+    line-height:1.02;
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic; color:var(--clay);}
+  .sub{
+    max-width:600px;
+    font-size:16px;
+    line-height:1.55;
+    color:#3f4a41;
+  }
+  .radius-note{
+    margin-top:22px;
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+  }
+  .radius-note span{display:flex; align-items:center; gap:7px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+  /* FILTERS */
+  .filters{
+    margin: 8px 0 36px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .filter-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .filter-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:#6b7268;
+    width:96px;
+    flex-shrink:0;
+  }
+  .chip{
+    border:1.5px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    padding:7px 14px;
+    border-radius:20px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .chip:hover{background:rgba(35,49,39,0.06);}
+  .chip.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .chip.active[data-cat="extremo"]{background:var(--clay); border-color:var(--clay);}
+  .chip.active[data-cat="relax"]{background:var(--teal); border-color:var(--teal);}
+  .chip.active[data-cat="romantico"]{background:#8a3b52; border-color:#8a3b52;}
+  .chip.active[data-cat="natura"]{background:var(--pine); border-color:var(--pine);}
+  .chip.active[data-cat="mistico"]{background:var(--gold); border-color:var(--gold); color:#2a2110;}
+  .chip.active[data-cat="viral"]{background:#4a4a8a; border-color:#4a4a8a;}
+
+  .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:#6b7268;
+    margin-top:2px;
+  }
+
+  /* GRID */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
+    gap:18px;
+  }
+  .card{
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:3px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:transform .18s ease, box-shadow .18s ease;
+    overflow:hidden;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:6px 6px 0 rgba(35,49,39,0.12);}
+  .card-top{
+    padding:16px 18px 0;
+  }
+  .stamp{
+    position:absolute;
+    top:14px; right:14px;
+    border:1.5px solid var(--ink);
+    border-radius:50%;
+    width:58px;height:58px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    transform:rotate(6deg);
+    background:var(--paper);
+  }
+  .stamp .t{font-size:14px; font-weight:600; line-height:1;}
+  .stamp .l{font-size:7.5px; text-transform:uppercase; letter-spacing:.05em; margin-top:2px;}
+
+  .place{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--clay-dark);
+    margin-bottom:6px;
+  }
+  .card h3{
+    font-family:'Fraunces', serif;
+    font-size:23px;
+    font-weight:600;
+    margin:0 22% 10px 0;
+    line-height:1.12;
+  }
+  .tags{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;}
+  .tag{
+    font-size:10.5px;
+    font-family:'IBM Plex Mono', monospace;
+    padding:3px 8px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    color:#4a544c;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .desc{
+    font-size:14px;
+    line-height:1.5;
+    color:#3a443c;
+    padding:0 18px;
+    margin-bottom:12px;
+  }
+  .meta{
+    border-top:1px dashed var(--line);
+    padding:11px 18px 15px;
+    font-size:12.5px;
+    color:#565f57;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-top:auto;
+  }
+  .budget{font-family:'IBM Plex Mono', monospace; font-weight:600; color:var(--ink);}
+
+  /* CATEGORY BAR (left edge accent) */
+  .card[data-cats*="extremo"]{border-left:5px solid var(--clay);}
+  .card[data-cats*="romantico"]:not([data-cats*="extremo"]){border-left:5px solid #8a3b52;}
+  .card[data-cats*="relax"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]){border-left:5px solid var(--teal);}
+  .card[data-cats*="natura"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]){border-left:5px solid var(--pine);}
+  .card[data-cats*="mistico"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]):not([data-cats*="natura"]){border-left:5px solid var(--gold);}
+  .card[data-cats*="viral"]:not([data-cats*="extremo"]):not([data-cats*="romantico"]):not([data-cats*="relax"]):not([data-cats*="natura"]):not([data-cats*="mistico"]){border-left:5px solid #4a4a8a;}
+
+  .hidden{display:none !important;}
+
+  footer{
+    margin-top:50px;
+    padding-top:20px;
+    border-top:2px solid var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:#6b7268;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  @media (max-width:520px){
+    .filter-row{gap:8px;}
+    .filter-label{width:100%;}
+    .card h3{margin-right:26%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Reto de la semana · Alonso &amp; Lila</div>
+    <h1>El radio de<br><em>reconexión.</em></h1>
+    <p class="sub">De la ciudad hasta donde llega Cuernavaca — desde planes dentro de CDMX hasta 2h30 en coche por Edomex, Morelos e Hidalgo. Adrenalina pura, relax total, romance clásico, algo místico, un montón de opciones virales. Filtra y arma su próxima salida.</p>
+    <div class="radius-note">
+      <span><span class="dot" style="background:var(--clay)"></span>Aventura extrema</span>
+      <span><span class="dot" style="background:var(--teal)"></span>Relax / spa</span>
+      <span><span class="dot" style="background:#8a3b52"></span>Romántico</span>
+      <span><span class="dot" style="background:var(--pine)"></span>Naturaleza</span>
+      <span><span class="dot" style="background:var(--gold)"></span>Místico / cultural</span>
+      <span><span class="dot" style="background:#4a4a8a"></span>Viral / foto</span>
+    </div>
+  </header>
+
+  <div class="filters">
+    <div class="filter-row">
+      <span class="filter-label">Categoría</span>
+      <button class="chip active" data-filter="cat" data-cat="all">Todas</button>
+      <button class="chip" data-filter="cat" data-cat="extremo">Extrema</button>
+      <button class="chip" data-filter="cat" data-cat="relax">Relax</button>
+      <button class="chip" data-filter="cat" data-cat="romantico">Romántico</button>
+      <button class="chip" data-filter="cat" data-cat="natura">Naturaleza</button>
+      <button class="chip" data-filter="cat" data-cat="mistico">Místico</button>
+      <button class="chip" data-filter="cat" data-cat="viral">Viral</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Distancia</span>
+      <button class="chip active" data-filter="dist" data-dist="all">Todas</button>
+      <button class="chip" data-filter="dist" data-dist="ciudad">Dentro de CDMX</button>
+      <button class="chip" data-filter="dist" data-dist="corta">≤ 1h30</button>
+      <button class="chip" data-filter="dist" data-dist="media">1h30 – 2h</button>
+      <button class="chip" data-filter="dist" data-dist="larga">2h – 2h45</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Presupuesto</span>
+      <button class="chip active" data-filter="bud" data-bud="all">Todos</button>
+      <button class="chip" data-filter="bud" data-bud="bajo">$</button>
+      <button class="chip" data-filter="bud" data-bud="medio">$$</button>
+      <button class="chip" data-filter="bud" data-bud="alto">$$$</button>
+    </div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <span>23 rutas · CDMX, Edomex, Morelos e Hidalgo</span>
+    <span>Toca un filtro para combinar categoría + distancia + presupuesto</span>
+  </footer>
+</div>
+
+<script>
+const spots = [
+  {
+    place:"Valle de Bravo, Edomex",
+    title:"Volar en parapente sobre el lago",
+    time:"2h", dist:"media", bud:"alto",
+    cats:["extremo","viral"],
+    tags:["Parapente en tándem","Vista al lago","Foto/video con GoPro"],
+    desc:"Despegan desde El Peñón o Monte Alto con instructor certificado, vuelan 30–45 min sobre el lago y los bosques de Valle. Es la experiencia de \"nos aventamos juntos\" más fotografiable de la zona — de las mejores del país para hacerlo.",
+    budget:"$1,980–2,700 / persona"
+  },
+  {
+    place:"Malinalco, Edomex",
+    title:"Domo con jacuzzi en la cima del pueblo",
+    time:"2h20", dist:"larga", bud:"alto",
+    cats:["romantico","extremo"],
+    tags:["Glamping domo","Jacuzzi","Tirolesa + rappel opcional"],
+    desc:"Un glamping en el punto más alto de Malinalco: domo privado, cama king, terraza y jacuzzi con vista al valle. De día pueden combinarlo con tirolesa, rappel o escalada en el mismo pueblo — de noche, amanecer abrazados viendo la niebla subir entre los cerros.",
+    budget:"desde $4,300 / noche"
+  },
+  {
+    place:"Tepoztlán, Morelos",
+    title:"Subir al Tepozteco y perderse en el pueblo mágico",
+    time:"1h30", dist:"corta", bud:"medio",
+    cats:["mistico","natura"],
+    tags:["Caminata a la pirámide","Mercado de artesanías","Nieves de sabores raros"],
+    desc:"Suben juntos al Cerro del Tepozteco (1.5–2h de subida) hasta la pirámide con la mejor vista del valle de Morelos. Bajando, mercado de artesanías, cuarzos, y nieve de sabores como pétalos de rosa o tequila. Pueblo con fama de energía especial.",
+    budget:"$200–400 / persona"
+  },
+  {
+    place:"Parque Nacional Lagunas de Zempoala, Morelos/Edomex",
+    title:"Kayak y picnic entre siete lagunas de bosque",
+    time:"1h30", dist:"corta", bud:"bajo",
+    cats:["natura","relax"],
+    tags:["Kayak/lancha","Caminata entre pinos","Picnic"],
+    desc:"Siete lagunas rodeadas de pinos y oyameles a 3,000 msnm. Rentan una lancha o kayak, caminan entre los senderos y arman un picnic a la orilla del agua. Es de los rincones menos saturados y más silenciosos del radio de CDMX — ideal si lo que buscan es desconexión real, no otro lugar con fila.",
+    budget:"$150–300 / persona"
+  },
+  {
+    place:"Oaxtepec, Morelos",
+    title:"Aguas termales al aire libre entre palapas",
+    time:"1h30", dist:"corta", bud:"medio",
+    cats:["relax"],
+    tags:["Pozas de agua termal","Palapas","Clima cálido todo el año"],
+    desc:"Balnearios de agua termal natural rodeados de palmeras, con temperatura agradable todo el año. Nada de prisa: se meten a las pozas, se secan al sol, comen algo rico y repiten. El antídoto directo a la rutina de oficina.",
+    budget:"$150–350 / persona"
+  },
+  {
+    place:"Cuernavaca, Morelos",
+    title:"Jardín Borda + comida en Hacienda de Cortés",
+    time:"1h30", dist:"corta", bud:"medio",
+    cats:["romantico","mistico"],
+    tags:["Jardín histórico","Hacienda del s. XVI","Clima primaveral"],
+    desc:"Caminan por los jardines coloniales del Jardín Borda (el que usaba Maximiliano) y comen en los patios de una hacienda de caña de azúcar del 1500 reconvertida en restaurante. Cuernavaca es \"la ciudad de la eterna primavera\" por algo: el clima solo ya se siente como vacaciones.",
+    budget:"$400–700 / persona"
+  },
+  {
+    place:"Ixtapan de la Sal, Edomex",
+    title:"Circuito hidrotermal para dos",
+    time:"2h", dist:"media", bud:"alto",
+    cats:["relax","romantico"],
+    tags:["Sauna + vapor + jacuzzi","Spa de pareja","Parque acuático cerca"],
+    desc:"Pueblo mágico entero construido alrededor del agua termal: spas con circuito hidrotermal (sauna, vapor, jacuzzi), masajes en pareja, y si quieren más movimiento, un parque acuático al lado. Es el destino clásico de \"nos vamos a consentir\" a la distancia justa.",
+    budget:"$800–1,500 / persona"
+  },
+  {
+    place:"Amecameca, Edomex",
+    title:"Cabalgata con los volcanes de frente",
+    time:"1h30", dist:"corta", bud:"medio",
+    cats:["natura","extremo"],
+    tags:["Cabalgata","Vista al Popocatépetl e Iztaccíhuatl","Bosque de altura"],
+    desc:"Suben a caballo por el Parque Nacional Izta-Popo con los dos volcanes literalmente frente a ustedes. Aire frío, pinos, silencio — y la sensación de estar mucho más lejos de la ciudad de lo que en realidad están.",
+    budget:"$300–600 / persona"
+  },
+  {
+    place:"Cuautla, Morelos",
+    title:"Cenar arriba de un árbol",
+    time:"1h45", dist:"media", bud:"medio",
+    cats:["romantico","viral"],
+    tags:["Restaurante en un árbol","Snacks/vino","Muy fotogénico"],
+    desc:"La Casa del Árbol: una cabaña-restaurante construida literalmente sobre un árbol, pensada para citas. Menú de snacks y bebidas, vista distinta a cualquier otra cena que hayan tenido. De las citas que más se han viralizado últimamente en esta zona — vale la fama.",
+    budget:"$500–900 / persona"
+  },
+  {
+    place:"La Marquesa, Edomex",
+    title:"Tirolesa exprés + trucha a la parrilla",
+    time:"40min", dist:"corta", bud:"bajo",
+    cats:["extremo","viral"],
+    tags:["Tirolesa rápida","Puestos de trucha","Ideal medio día"],
+    desc:"La opción para cuando no hay todo un día pero sí ganas de adrenalina: tirolesas cortas entre pinos, a 40 minutos de la ciudad, y de bajada, puestos de trucha a la parrilla al lado de la carretera. Barato, rápido, sorprendentemente divertido.",
+    budget:"$100–250 / persona"
+  },
+  {
+    place:"Real del Monte y Mineral del Chico, Hidalgo",
+    title:"Pueblo minero inglés + bosque de niebla",
+    time:"2h", dist:"media", bud:"medio",
+    cats:["mistico","natura"],
+    tags:["Arquitectura minera inglesa","Pastes","Senderismo en bosque de coníferas"],
+    desc:"Un pueblo con casas de tejado a dos aguas y ascendencia inglesa (por los mineros galeses del s. XIX), famoso por sus pastes. A 15 minutos, Mineral del Chico: bosque de niebla, riscos y senderos para caminar tomados de la mano sin cruzarse con nadie.",
+    budget:"$300–600 / persona"
+  },
+  {
+    place:"Tequesquitengo, Morelos",
+    title:"Paracaidismo, esquí acuático y lancha",
+    time:"1h45", dist:"media", bud:"alto",
+    cats:["extremo","natura"],
+    tags:["Salto en paracaídas","Esquí/wakeboard","Lago artificial"],
+    desc:"El lago artificial más completo para deportes acuáticos cerca de CDMX: esquí, wakeboard, banana boat — y si quieren ir directo al extremo, salto en paracaídas desde avioneta con vista al lago. Para la pareja que mide la adrenalina en metros de caída libre.",
+    budget:"$1,500–3,500 / persona (paracaídas)"
+  },
+  {
+    place:"Zacatlán, Puebla — extra si estiran el radio",
+    title:"La tirolesa más alta de México, de noche",
+    time:"2h45", dist:"larga", bud:"medio",
+    cats:["extremo","viral"],
+    tags:["1,400m de largo, 500m de altura","Modalidad nocturna sábados","Fogata + caminata de leyendas"],
+    desc:"Sobre la Barranca de los Jilgueros: la tirolesa más larga y alta del país, con una modalidad nocturna poco común (solo sábados 7:15pm) que incluye fogata y caminata por un sendero de leyendas. Se sale un poco del radio de Cuernavaca, pero si van a estirar la distancia por algo, es por esto.",
+    budget:"$2,360 / persona"
+  },
+  {
+    place:"Chignahuapan, Puebla — extra si estiran el radio",
+    title:"Globo aerostático al amanecer + termales",
+    time:"2h30", dist:"larga", bud:"alto",
+    cats:["romantico","relax"],
+    tags:["Globo al amanecer","Aguas termales","Pueblo de las esferas navideñas"],
+    desc:"Amanecer en globo aerostático sobre paisajes de viñedos y montaña, y de bajada, balnearios de aguas termales para bajar el ritmo. Es de los planes más \"cinematográficos\" que van a encontrar cerca de CDMX, aunque cae un poco más lejos que Cuernavaca.",
+    budget:"$2,500–4,000 / persona"
+  },
+  {
+    place:"Arena México, Doctores",
+    title:"Lucha libre, tacos y mezcal",
+    time:"20 min", dist:"ciudad", bud:"medio",
+    cats:["viral","romantico"],
+    tags:["Función en vivo","Tacos al pastor","Máscaras y fotos con luchadores"],
+    desc:"La \"catedral de la lucha libre\": gritos, cerveza fría, acrobacias y la posibilidad de tomarse la foto con un luchador si tienen suerte. Funciones viernes, domingo y martes. De las experiencias más compartidas en redes por turistas y capitalinos por igual — y es 100% plan de pareja, no solo de amigos.",
+    budget:"$88–450 / persona"
+  },
+  {
+    place:"Bosque de Chapultepec, 2ª sección",
+    title:"Rueda de la fortuna de noche en Parque Aztlán",
+    time:"25 min", dist:"ciudad", bud:"bajo",
+    cats:["viral","romantico"],
+    tags:["Rueda de 85 metros","Vista nocturna de la ciudad","Atracciones extra"],
+    desc:"La rueda de la fortuna más alta de la ciudad, dentro del parque urbano Aztlán, abierta de noche. Entrada gratis, atracciones desde $40. Es de los planes que más se están viendo en TikTok últimamente para citas nocturnas sin salir de la ciudad.",
+    budget:"$100–300 / persona"
+  },
+  {
+    place:"Teotihuacán, Edomex",
+    title:"Globo aerostático al amanecer sobre las pirámides",
+    time:"55 min", dist:"corta", bud:"alto",
+    cats:["romantico","viral"],
+    tags:["Vuelo al amanecer","Desayuno en cueva","Vista a la Pirámide del Sol"],
+    desc:"Se levantan de madrugada, vuelan en globo sobre la zona arqueológica cuando sale el sol, y bajan a desayunar en La Gruta, un restaurante dentro de una cueva natural. Es una de las experiencias mejor calificadas y más publicadas del radio de CDMX — cae justo antes de Cuernavaca en distancia, pero se siente como otro país.",
+    budget:"$2,200–3,500 / persona"
+  },
+  {
+    place:"Colonia Iztacalco / Tepeyac",
+    title:"Acuario Michin y Parque Tepeyac",
+    time:"20 min", dist:"ciudad", bud:"medio",
+    cats:["viral","relax"],
+    tags:["Túnel de tiburones","Áreas interactivas","Plan de medio día"],
+    desc:"Un acuario con túnel de tiburones y zonas donde puedes tocar rayas, seguido de una caminata por el parque. Plan tranquilo, fotogénico y distinto a los de siempre — está sonando fuerte en TikTok como \"date diferente\" dentro de la ciudad.",
+    budget:"$250–450 / persona"
+  },
+  {
+    place:"Polanco",
+    title:"Ruta de fotos: letrero México Mi Amor + brunch en Mimbre",
+    time:"15 min", dist:"ciudad", bud:"medio",
+    cats:["viral"],
+    tags:["Spot de fotos icónico","Brunch en la Privada Roja","Caminata por Masaryk"],
+    desc:"El letrero de neón más fotografiado de la ciudad, seguido de un brunch en Mimbre, dentro de la Privada Roja — de los rincones que más se repiten en cuentas de \"lugares instagrameables CDMX\" este año. Plan corto, ideal para una tarde de sábado.",
+    budget:"$400–700 / persona"
+  },
+  {
+    place:"Bosque de Chapultepec, 1ª sección",
+    title:"Castillo de Chapultepec + picnic en el bosque",
+    time:"25 min", dist:"ciudad", bud:"bajo",
+    cats:["romantico","mistico"],
+    tags:["Castillo y museo","Picnic en el bosque","Atardecer con vista a la ciudad"],
+    desc:"Suben al único castillo real de América habitado por gobernantes, ven el atardecer desde sus jardines, y bajan a tender una manta en el bosque. Es el plan clásico reinventado: la parte nueva es hacerlo como cierre de día completo, no como \"paseíto rápido\".",
+    budget:"$100–300 / persona"
+  },
+  {
+    place:"Torre Manacar, Santa Fe / Polanco",
+    title:"Karting indoor a toda velocidad",
+    time:"20 min", dist:"ciudad", bud:"medio",
+    cats:["extremo","viral"],
+    tags:["Pista indoor profesional","Carreras cronometradas","Ideal para competir en pareja"],
+    desc:"Circuitos de karting indoor tipo K1 Speed, con pista profesional dentro de un centro comercial. Compiten cabeza a cabeza, sin necesidad de salir de la ciudad ni planear con anticipación — de las actividades \"date night con adrenalina\" que más están circulando en TikTok CDMX.",
+    budget:"$400–1,500 / persona"
+  },
+  {
+    place:"Xochimilco",
+    title:"Trajinera nocturna con luces, mariachi y ponche",
+    time:"35 min", dist:"ciudad", bud:"medio",
+    cats:["viral","romantico"],
+    tags:["Trajinera decorada con luces","Mariachi opcional","Ambiente muy distinto al de día"],
+    desc:"El mismo Xochimilco de siempre, pero de noche: trajineras iluminadas con luces cálidas, canales en silencio y la opción de contratar un trío o mariachi que se acerque en su propia trajinera. La versión nocturna es la que está circulando en redes como \"la cita que nadie hace\" — de día es turístico, de noche cambia todo.",
+    budget:"$500–900 / persona"
+  },
+  {
+    place:"Centro Histórico",
+    title:"LUNA: experiencia inmersiva en realidad virtual del Apollo 11",
+    time:"20 min", dist:"ciudad", bud:"medio",
+    cats:["viral","mistico"],
+    tags:["Realidad virtual","Misión espacial","Plan de una hora"],
+    desc:"Una experiencia inmersiva en VR que recrea la misión Apollo 11 — de las novedades culturales que más se están recomendando este año como plan de pareja corto y diferente, ideal para combinar con una caminata por el Centro después.",
+    budget:"$300–500 / persona"
+  }
+];
+
+const grid = document.getElementById('grid');
+const countEl = document.getElementById('count');
+
+function render(){
+  grid.innerHTML = spots.map(s => `
+    <div class="card" data-cats="${s.cats.join(',')}" data-dist="${s.dist}" data-bud="${s.bud}">
+      <div class="stamp"><span class="t">${s.time}</span><span class="l">${s.dist==='ciudad' ? 'en la ciudad' : 'desde cdmx'}</span></div>
+      <div class="card-top">
+        <div class="place">${s.place}</div>
+        <h3>${s.title}</h3>
+        <div class="tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="desc">${s.desc}</div>
+      <div class="meta"><span>${s.budget}</span></div>
+    </div>
+  `).join('');
+  applyFilters();
+}
+
+let state = {cat:'all', dist:'all', bud:'all'};
+
+document.querySelectorAll('.chip').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const type = btn.dataset.filter;
+    document.querySelectorAll(`.chip[data-filter="${type}"]`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if(type==='cat') state.cat = btn.dataset.cat;
+    if(type==='dist') state.dist = btn.dataset.dist;
+    if(type==='bud') state.bud = btn.dataset.bud;
+    applyFilters();
+  });
+});
+
+function applyFilters(){
+  let visible = 0;
+  document.querySelectorAll('.card').forEach(card=>{
+    const cats = card.dataset.cats.split(',');
+    const okCat = state.cat==='all' || cats.includes(state.cat);
+    const okDist = state.dist==='all' || card.dataset.dist===state.dist;
+    const okBud = state.bud==='all' || card.dataset.bud===state.bud;
+    const show = okCat && okDist && okBud;
+    card.classList.toggle('hidden', !show);
+    if(show) visible++;
+  });
+  countEl.textContent = `${visible} ruta${visible===1?'':'s'} con estos filtros`;
+}
+
+render();
+</script>
+</body>
+</html>
