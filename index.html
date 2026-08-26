@@ -385,6 +385,25 @@
   #dayModal .modal-actions button.primary{background:var(--ink); color:var(--paper);}
   #dayModal .modal-actions button.close-btn{margin-left:auto; border-color:transparent; text-decoration:underline;}
 
+  /* PUENTE / LONG WEEKEND BADGE */
+  .card[data-dist="puente"]{
+    border-style:dashed;
+    border-color:var(--gold);
+  }
+  .card[data-dist="puente"] .stamp{
+    background:var(--gold);
+    border-color:var(--ink);
+  }
+  .puente-note{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--clay-dark);
+    padding:0 18px 10px;
+    margin-top:-6px;
+  }
+
   .hidden{display:none !important;}
 
   footer{
@@ -443,6 +462,7 @@
       <button class="chip" data-filter="dist" data-dist="corta">≤ 1h30</button>
       <button class="chip" data-filter="dist" data-dist="media">1h30 – 2h</button>
       <button class="chip" data-filter="dist" data-dist="larga">2h – 2h45</button>
+      <button class="chip" data-filter="dist" data-dist="puente">Puentes / fin de semana largo</button>
     </div>
     <div class="filter-row">
       <span class="filter-label">Presupuesto</span>
@@ -544,7 +564,7 @@
 
 
   <footer>
-    <span>50 rutas · CDMX, Edomex, Morelos, Hidalgo y Puebla</span>
+    <span>56 rutas · CDMX, Edomex, Morelos, Hidalgo, Puebla, Tlaxcala + 1 plan de puente</span>
     <span>Toca un filtro para combinar categoría + distancia + presupuesto</span>
   </footer>
 </div>
@@ -876,6 +896,24 @@ const spots = [
     budget:"$600–1,000 / persona"
   },
   {
+    place:"San Lucas El Grande, Puebla",
+    title:"Ex Hacienda de Chautla: un castillo inglés en medio de un lago",
+    time:"1h30", dist:"corta", bud:"bajo",
+    cats:["viral","romantico"],
+    tags:["Castillo de estilo inglés del siglo XIX","Jardines inspirados en Versalles","Tirolesa, lancha y pesca de trucha"],
+    desc:"Un castillo de ladrillo rojo con cuatro torres, construido por el último marqués de la hacienda, parado literalmente en medio de un lago artificial — se siente sacado de Orgullo y Prejuicio. Los jardines están inspirados en Versalles, hay tirolesa de 256m, renta de lancha y pesca de trucha. La entrada cuesta apenas $40-45 pesos, de los planes con más impacto visual por menos dinero de toda la lista.",
+    budget:"$300–600 / persona"
+  },
+  {
+    place:"Tehuixtla, Morelos (cerca de Tequesquitengo)",
+    title:"Jardines de México: el jardín floral más grande del mundo",
+    time:"2h", dist:"media", bud:"medio",
+    cats:["viral","romantico"],
+    tags:["Jardín Italiano estilo villa renacentista","Jardín Japonés con puentes y pagoda","51 hectáreas, 9 jardines temáticos distintos"],
+    desc:"51 hectáreas divididas en jardines temáticos: el Italiano recrea una villa renacentista con escalinatas y esculturas clásicas, el Japonés tiene bambú, un puente rojo y una casa de té sobre el agua. Se exhiben cerca de 200 millones de flores al año, cambiando según la temporada. Es el tipo de lugar donde cada rincón parece un país distinto — de los más fotografiables de todo el radio.",
+    budget:"$500–800 / persona"
+  },
+  {
     place:"Polanco, CDMX",
     title:"Quintonil — la mesa mejor valorada de México",
     time:"20 min", dist:"ciudad", bud:"alto",
@@ -1000,6 +1038,42 @@ const spots = [
     tags:["Prismas Basálticos de Santa María Regla","Haciendas del siglo XIX","Recorridos en globo"],
     desc:"El primer Pueblo Mágico de México (nombrado en 2001): formaciones de roca volcánica en columnas hexagonales que parecen un órgano gigante, haciendas mineras convertidas en hoteles, y bosques para caminar. Cae un poco más lejos que Cuernavaca, pero es de los paisajes más distintos de todo el radio.",
     budget:"$300–700 / persona"
+  },
+  {
+    place:"Acaxochitlán, Hidalgo",
+    title:"Cascadas Dos Mundos: la de las Hadas, la de las Sirenas y luciérnagas de noche",
+    time:"2h", dist:"media", bud:"medio",
+    cats:["natura","mistico"],
+    tags:["Más de 10 cascadas con nombre propio","Puentes colgantes y tirolesa","Recorrido nocturno para ver luciérnagas"],
+    desc:"Un centro ecoturístico con senderos que conectan más de diez cascadas — Cascada de las Hadas, de las Sirenas, de las Mariposas — entre bosque cubierto de musgo. De noche organizan recorridos guiados para ver luciérnagas. Es la versión \"cuento de hadas\" de un día de cascadas: nada tenebroso, solo bonito y tranquilo.",
+    budget:"$250–500 / persona"
+  },
+  {
+    place:"Nanacamilpa, Tlaxcala",
+    title:"El bosque que se ilumina solo con luciérnagas",
+    time:"2h", dist:"media", bud:"medio",
+    cats:["mistico","romantico"],
+    tags:["Miles de luciérnagas sincronizadas","Recorrido guiado nocturno y silencioso","Temporada: junio–agosto aprox."],
+    desc:"Un bosque de oyameles que de noche se llena de miles de luciérnagas parpadeando al mismo tiempo — parece efecto especial, pero es completamente real. El recorrido es guiado, en silencio, casi meditativo. Solo aplica en temporada (normalmente de junio a agosto), así que hay que checar fechas antes de planear el día.",
+    budget:"$300–550 / persona"
+  },
+  {
+    place:"El Cardonal, Hidalgo — para puentes y fines de semana largos",
+    title:"Grutas de Tolantongo: cañón, río termal turquesa y tirolesa de 1.9 km",
+    time:"3h – 4h", dist:"puente", bud:"medio",
+    cats:["extremo","natura","relax"],
+    tags:["Fuera del radio habitual — mejor para puente","Río termal de 1.5 km + pozas escalonadas","Tirolesa de casi 2 km sobre el cañón"],
+    desc:"Un cañón de 800 metros de altura con un río termal turquesa, pozas talladas en la roca, cuevas por las que caminas metido en agua caliente, y una tirolesa de casi 2 km que cruza el cañón entero por los aires. No hay nada parecido en todo el país tan cerca de CDMX — pero sí se sale del radio tipo Cuernavaca, así que solo tiene sentido si tienen un puente o un fin de semana completo, mejor con una noche de hospedaje ahí mismo.",
+    budget:"$1,200–2,500 / persona (día + noche)"
+  },
+  {
+    place:"Santa Águeda, Tlaxcala",
+    title:"Val'Quirico: el pueblo que recreó la Toscana italiana",
+    time:"2h", dist:"larga", bud:"medio",
+    cats:["viral","romantico"],
+    tags:["Calles empedradas estilo toscano","Más de 20 restaurantes, bares y tiendas","Entrada gratis, muy fotogénico"],
+    desc:"Un desarrollo construido en 2014 sobre una hacienda porfiriana, diseñado para sentirse como un pueblo medieval de la Toscana: callejones empedrados, casas de piedra y adobe con balcones llenos de flores, música en vivo los fines de semana. La entrada es gratis (solo se paga estacionamiento), y es de los lugares que más se repiten en fotos de \"parece que estás en Europa\" sin salir del país. Puede sentirse pequeño y algo caro en comida si van con expectativas de pueblo real — es más bien un set fotográfico muy bien hecho.",
+    budget:"$600–1,000 / persona"
   }
 ];
 
@@ -1009,7 +1083,7 @@ const countEl = document.getElementById('count');
 function render(){
   grid.innerHTML = spots.map((s,i) => `
     <div class="card" data-cats="${s.cats.join(',')}" data-dist="${s.dist}" data-bud="${s.bud}">
-      <div class="stamp"><span class="t">${s.time}</span><span class="l">${s.dist==='ciudad' ? 'en la ciudad' : 'desde cdmx'}</span></div>
+      <div class="stamp"><span class="t">${s.time}</span><span class="l">${s.dist==='ciudad' ? 'en la ciudad' : (s.dist==='puente' ? 'plan de puente' : 'desde cdmx')}</span></div>
       <div class="card-top">
         <div class="place">${s.place}</div>
         <h3>${s.title}</h3>
